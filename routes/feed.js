@@ -1,8 +1,11 @@
-const express = require('express');
-const feedController = require('../controllers/feed');
+import express from 'express';
+
+import { getPosts, createPost } from '../controllers/feed.js';
 
 const router = express.Router();
 
-router.get('/posts', feedController.getPosts);
+router.get('/posts', getPosts);
+router.post('/post', createPost);
 
-module.exports = router;
+// module.exports = router;
+export default router;

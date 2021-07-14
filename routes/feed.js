@@ -14,6 +14,7 @@ import {
 const router = express.Router();
 
 router.get('/posts', isAuth, getPosts);
+
 router.post(
   '/post',
   isAuth,

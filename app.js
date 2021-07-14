@@ -65,11 +65,11 @@ app.use((error, req, res, nest) => {
   res.status(status).json({ message: message, data: data });
 });
 
-mongoose
-  .connect(
+try {
+  await mongoose.connect(
     'mongodb+srv://farhanh:UH4udQV8YCO6vT06@cluster0.vstco.mongodb.net/messages?retryWrites=true&w=majority',
-  )
-  .then((result) => {
-    app.listen(8080);
-  })
-  .catch((err) => console.log(err));
+  );
+  app.listen(8080);
+} catch (err) {
+  console.log(err);
+}

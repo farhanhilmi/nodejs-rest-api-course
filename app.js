@@ -7,11 +7,10 @@ import mongoose from 'mongoose';
 import multer from 'multer';
 import { v4 as uuidv4 } from 'uuid';
 
-import socket from './socket.js';
-
-// const feedRoutes = require('./routes/feed');
-import feedRoutes from './routes/feed.js';
-import authRoutes from './routes/auth.js';
+// Graphql
+import { graphqlHTTP } from 'express-graphql';
+import graphqlSchema from './graphql/schema.js';
+import graphqlResolver from './graphql/resolvers.js';
 
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
@@ -56,8 +55,15 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/feed', feedRoutes);
-app.use('/auth', authRoutes);
+// GraphQL
+app.use(
+  '/graphql',
+  graphqlHTTP({
+    schema: graphqlSchema,
+    rootValue: graphqlResolver,
+    graphiql: true,
+  }),
+);
 
 app.use((error, req, res, nest) => {
   console.log(error);
@@ -71,14 +77,7 @@ try {
   await mongoose.connect(
     'mongodb+srv://farhanh:UH4udQV8YCO6vT06@cluster0.vstco.mongodb.net/messages?retryWrites=true&w=majority',
   );
-  const server = app.listen(8080);
-  // const io = require('socket.io')(server);
-
-  const io = socket.init(server);
-
-  io.on('connection', (socket) => {
-    console.log('Clinet Connected');
-  });
+  app.listen(8080);
   console.log('Server Started');
 } catch (err) {
   console.log(err);

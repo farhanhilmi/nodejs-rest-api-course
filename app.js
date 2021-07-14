@@ -7,6 +7,8 @@ import mongoose from 'mongoose';
 import multer from 'multer';
 import { v4 as uuidv4 } from 'uuid';
 
+import socket from './socket.js';
+
 // const feedRoutes = require('./routes/feed');
 import feedRoutes from './routes/feed.js';
 import authRoutes from './routes/auth.js';
@@ -69,7 +71,15 @@ try {
   await mongoose.connect(
     'mongodb+srv://farhanh:UH4udQV8YCO6vT06@cluster0.vstco.mongodb.net/messages?retryWrites=true&w=majority',
   );
-  app.listen(8080);
+  const server = app.listen(8080);
+  // const io = require('socket.io')(server);
+
+  const io = socket.init(server);
+
+  io.on('connection', (socket) => {
+    console.log('Clinet Connected');
+  });
+  console.log('Server Started');
 } catch (err) {
   console.log(err);
 }

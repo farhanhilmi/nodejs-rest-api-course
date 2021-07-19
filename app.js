@@ -113,9 +113,9 @@ app.use((error, req, res, nest) => {
 
 try {
   await mongoose.connect(
-    'mongodb+srv://farhanh:UH4udQV8YCO6vT06@cluster0.vstco.mongodb.net/messages?retryWrites=true&w=majority',
+    `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0.vstco.mongodb.net/${process.env.MONGO_DEFAULT_DATABASE}?retryWrites=true&w=majority`,
   );
-  app.listen(8080);
+  app.listen(process.env.PORT || 3000);
   console.log('Server Started');
 } catch (err) {
   console.log(err);

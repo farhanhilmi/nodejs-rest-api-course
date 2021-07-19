@@ -1,0 +1,8 @@
+{
+  "env": {
+    "MONGO_USER": "farhanh",
+    "MONGO_PASSWORD": "UH4udQV8YCO6vT06",
+    "MONGO_DEFAULT_DATABASE": "messages",
+    "SECRET_KEY": "somesupersecretkey"
+  }
+}

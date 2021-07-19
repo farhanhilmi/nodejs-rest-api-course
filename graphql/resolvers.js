@@ -64,7 +64,7 @@ const login = async ({ email, password }) => {
       userId: user._id.toString(),
       email: user.email,
     },
-    'supersecret',
+    process.env.SECRET_KEY,
     { expiresIn: '1h' },
   );
 

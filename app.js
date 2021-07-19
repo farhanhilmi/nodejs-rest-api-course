@@ -1,12 +1,17 @@
 import { fileURLToPath } from 'url';
 import path, { dirname } from 'path';
+import fs from 'fs';
 
 // const express = require('express');
 import express from 'express';
 import mongoose from 'mongoose';
 import multer from 'multer';
 import { v4 as uuidv4 } from 'uuid';
+
+// Prod
 import helmet from 'helmet';
+import compression from 'compression';
+import morgan from 'morgan';
 
 // Graphql
 import { graphqlHTTP } from 'express-graphql';
@@ -45,6 +50,17 @@ app.use(express.json());
 
 // Secure Response Header
 app.use(helmet());
+
+// compression
+app.use(compression());
+
+const accessLogStream = fs.createWriteStream(
+  path.join(__dirname, 'access.log'),
+  { flags: 'a' },
+);
+
+// Logging with morgan
+app.use(morgan('combined', { stream: accessLogStream }));
 
 app.use(
   multer({ storage: fileStorage, fileFilter: fileFilter }).single('image'),

@@ -6,6 +6,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import multer from 'multer';
 import { v4 as uuidv4 } from 'uuid';
+import helmet from 'helmet';
 
 // Graphql
 import { graphqlHTTP } from 'express-graphql';
@@ -41,6 +42,9 @@ const fileFilter = (req, file, callback) => {
 };
 
 app.use(express.json());
+
+// Secure Response Header
+app.use(helmet());
 
 app.use(
   multer({ storage: fileStorage, fileFilter: fileFilter }).single('image'),

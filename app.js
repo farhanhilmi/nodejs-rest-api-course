@@ -11,6 +11,9 @@ import { v4 as uuidv4 } from 'uuid';
 import { graphqlHTTP } from 'express-graphql';
 import graphqlSchema from './graphql/schema.js';
 import graphqlResolver from './graphql/resolvers.js';
+import auth from './middleware/auth.js';
+
+import { clearImage } from './util/file.js';
 
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
@@ -52,7 +55,33 @@ app.use((req, res, next) => {
     'GET, POST, PUT, PATCH, DELETE',
   );
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
   next();
+});
+
+// Auth GraphQL
+app.use(auth);
+
+// IMAGES REQ
+app.put('/post-image', (req, res, next) => {
+  if (!req.isAuth) {
+    throw new Error('NOt authenticated');
+  }
+
+  if (!req.file) {
+    return res.status(200).json({ message: 'no file provided!' });
+  }
+  const imageUrl = req.file.path.replace('\\', '/');
+
+  if (req.body.oldPath) {
+    clearImage(req.body.oldPath);
+  }
+
+  return res
+    .status(201)
+    .json({ message: 'Success Stored', filePath: imageUrl });
 });
 
 // GraphQL
@@ -62,6 +91,15 @@ app.use(
     schema: graphqlSchema,
     rootValue: graphqlResolver,
     graphiql: true,
+    formatError(err) {
+      if (!err.originalError) {
+        return err;
+      }
+      const data = err.originalError.data;
+      const message = err.message || 'An error occurred';
+      const code = err.originalError.code || 500;
+      return { message: message, status: code, data: data };
+    },
   }),
 );
 

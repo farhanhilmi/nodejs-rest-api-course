@@ -18,7 +18,17 @@ export default buildSchema(`
     email: String!
     password: String
     status: String!
-    post: [Post!]!
+    posts: [Post!]!
+  }
+
+  type AuthData {
+    token: String!
+    userId: String!
+  }
+
+  type PostData {
+    posts: [Post!]!
+    totalPosts: Int!
   }
 
   input UserInputData {
@@ -27,16 +37,29 @@ export default buildSchema(`
     password: String!
   }
 
-  type RootMutation {
-    createUser(userInput: UserInputData): User!
+  input PostInputData {
+    title: String!
+    content: String!
+    imageUrl: String!
   }
 
-  type rootQuery {
-    name: String
+  type RootMutation {
+    createUser(userInput: UserInputData): User!
+    createPost(postInput: PostInputData): Post!
+    updatePost(id: ID!, postInput: PostInputData!): Post!
+    deletePost(id: ID!): Boolean
+    updateStatus(status: String!): User! 
+  }
+
+  type RootQuery {
+    login(email: String!, password: String!): AuthData!
+    posts(page: Int): PostData!
+    post(id: ID!): Post!
+    user: User!
   }
 
   schema {
     mutation: RootMutation
-    query: rootQuery
+    query: RootQuery
   }
 `);

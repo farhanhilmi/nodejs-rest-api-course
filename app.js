@@ -1,6 +1,7 @@
 import { fileURLToPath } from 'url';
 import path, { dirname } from 'path';
 import fs from 'fs';
+import https from 'https';
 
 // const express = require('express');
 import express from 'express';
@@ -24,6 +25,10 @@ import { clearImage } from './util/file.js';
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+
+// Read PrivateKey
+const privateKey = fs.readFileSync('server.key');
+const certificate = fs.readFileSync('server.key');
 
 const fileStorage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -135,7 +140,9 @@ try {
   await mongoose.connect(
     `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0.vstco.mongodb.net/${process.env.MONGO_DEFAULT_DATABASE}?retryWrites=true&w=majority`,
   );
-  app.listen(process.env.PORT || 3000);
+  https
+    .createServer({ key: privateKey, cert: certificate }, app)
+    .listen(process.env.PORT || 3000);
   console.log('Server Started');
 } catch (err) {
   console.log(err);

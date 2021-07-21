@@ -8,7 +8,8 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "NODE_ENV=production MONGO_USER=farhanh MONGO_PASSWORD=UH4udQV8YCO6vT06 MONGO_DEFAULT_DATABASE=messages SECRET_KEY=somesupersecretkey node app.js"
+    "start": "node ./bin/www",
+    "start:dev": "nodemon app.js"
   },
   "repository": {
     "type": "git",

@@ -54,7 +54,10 @@ const fileFilter = (req, file, callback) => {
 app.use(express.json());
 
 // Secure Response Header
-app.use(helmet());
+app.use((req, res, next) => {
+  helmet();
+  next();
+});
 
 // compression
 app.use(compression());
@@ -140,9 +143,10 @@ try {
   await mongoose.connect(
     `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0.vstco.mongodb.net/${process.env.MONGO_DEFAULT_DATABASE}?retryWrites=true&w=majority`,
   );
-  https
-    .createServer({ key: privateKey, cert: certificate }, app)
-    .listen(process.env.PORT || 3000);
+  // https
+  //   .createServer({ key: privateKey, cert: certificate }, app)
+  //   .listen(process.env.PORT || 3000);
+  app.listen(process.env.PORT || 3000);
   console.log('Server Started');
 } catch (err) {
   console.log(err);

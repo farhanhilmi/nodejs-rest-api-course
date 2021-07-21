@@ -27,8 +27,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 // Read PrivateKey
-const privateKey = fs.readFileSync('server.key');
-const certificate = fs.readFileSync('server.key');
+// const privateKey = fs.readFileSync('server.key');
+// const certificate = fs.readFileSync('server.key');
 
 const fileStorage = multer.diskStorage({
   destination: function (req, file, cb) {

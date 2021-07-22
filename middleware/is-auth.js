@@ -6,7 +6,7 @@ export default (req, res, next) => {
   if (!authHeader) {
     const error = new Error('not authenticated');
     error.statusCode = 401;
-    throw err;
+    throw error;
   }
 
   const token = authHeader.split(' ')[1];

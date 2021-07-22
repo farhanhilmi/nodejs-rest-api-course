@@ -75,9 +75,11 @@ export const login = async (req, res, next) => {
       token: token,
       userId: user._id.toString(),
     });
+    return;
   } catch (err) {
     ERROR(err);
     next(err);
+    return err;
   }
 };
 
